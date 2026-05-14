@@ -1,0 +1,89 @@
+﻿{% extends "patients/base.html" %}
+{% load patient_extras %}
+{% block title %}Patient History | PUDPredict{% endblock %}
+{% block content %}
+<main class="app-frame page reveal">
+  <section class="app-title-row compact-title">
+    <div>
+      <h1>Patient History</h1>
+      <p class="lead">Review all patient assessments and prediction records</p>
+    </div>
+  </section>
+
+  <section class="history-toolbar">
+    <label class="search-box"><i data-lucide="search"></i><input type="search" data-history-search placeholder="Search by patient name..."></label>
+    <select class="input-control risk-filter" data-risk-filter>
+      <option value="all">All Risk Levels</option>
+      <option value="low">Low</option>
+      <option value="medium">Moderate</option>
+      <option value="high">High</option>
+      <option value="critical">Critical</option>
+    </select>
+  </section>
+
+  <section class="table-card history-card">
+    <div class="responsive-table">
+      <table>
+        <thead><tr><th>Patient</th><th>Risk Level</th><th>Score</th><th>Prediction</th><th>Confidence</th><th>Date</th><th>Action</th></tr></thead>
+        <tbody>
+          {% for patient in patients %}
+            {% with latest=patient.assessments.first %}
+              {% if latest %}
+                <tr data-history-row data-patient-name="{{ patient.full_name|lower }}" data-risk="{{ latest.severity|lower }}">
+                  <td><strong>{{ patient.full_name }}</strong></td>
+                  <td><span class="badge {{ latest.severity|badge_class }}">{% if latest.severity == "Medium" %}Moderate{% else %}{{ latest.severity }}{% endif %}</span></td>
+                  <td><strong>{{ latest.risk_score }}%</strong></td>
+                  <td>Duodenal Ulcer</td>
+                  <td>{{ latest.risk_score|add:4 }}%</td>
+                  <td>{{ latest.created_at|date:"d/m/Y" }}</td>
+                  <td><div class="action-group"><button class="icon-action" type="button" data-open-prediction data-name="{{ patient.full_name }}" data-score="{{ latest.risk_score }}" data-risk="{% if latest.severity == 'Medium' %}Moderate{% else %}{{ latest.severity }}{% endif %}" data-confidence="{{ latest.risk_score|add:4 }}" data-date="{{ latest.created_at|date:'d/m/Y' }}" data-notes="{{ latest.symptoms|default:'Clinical risk assessment generated from patient data.' }}" aria-label="View prediction details"><i data-lucide="eye"></i></button><form method="post" action="{% url 'patients:delete_patient' patient.id %}" data-confirm-delete>{% csrf_token %}<button class="icon-action delete-action" type="submit" aria-label="Delete patient record"><i data-lucide="trash-2"></i></button></form></div></td>
+                </tr>
+              {% endif %}
+            {% endwith %}
+          {% empty %}
+            <tr><td colspan="7" class="empty-state"><i data-lucide="activity"></i><span>No patient history yet.</span></td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="prediction-modal" data-prediction-modal aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <article class="modal-card">
+      <button class="modal-close" type="button" data-close-modal aria-label="Close prediction details"><i data-lucide="x"></i></button>
+      <h2>Prediction Details - <span data-modal-name>Patient</span></h2>
+      <div class="modal-summary-card">
+        <div class="risk-circle"><strong data-modal-score>0%</strong><span>Risk</span></div>
+        <div>
+          <h3><i data-lucide="trending-up"></i> <span data-modal-risk>Moderate</span> Risk</h3>
+          <h4>Duodenal Ulcer</h4>
+          <p>Model Confidence: <strong data-modal-confidence>72%</strong></p>
+        </div>
+      </div>
+      <div class="modal-grid">
+        <section class="detail-card">
+          <h3>Key Risk Factors</h3>
+          <ol class="factor-list">
+            <li>High Stress Level - chronic stress can increase stomach acid and worsen symptoms.</li>
+            <li>Family History - genetic predisposition may increase ulcer risk.</li>
+            <li>Irregular Diet - skipped meals and trigger foods can irritate the gastric lining.</li>
+            <li>NSAID Exposure - frequent pain reliever use can damage stomach protection.</li>
+            <li>H. pylori Status - testing helps guide appropriate clinical management.</li>
+          </ol>
+        </section>
+        <section class="detail-card">
+          <h3>Clinical Recommendations</h3>
+          <ul class="recommendations">
+            <li>Encourage medical follow-up for persistent or worsening symptoms.</li>
+            <li>Discuss H. pylori testing with a healthcare provider.</li>
+            <li>Avoid self-treatment with NSAIDs unless prescribed.</li>
+            <li>Use symptom tracking to identify meals, stress, or medication triggers.</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+  </div>
+</main>
+{% endblock %}
+

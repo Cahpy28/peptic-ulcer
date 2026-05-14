@@ -1,0 +1,72 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}PUDPredict{% endblock %}</title>
+  <link rel="icon" type="image/svg+xml" href="{% static 'assets/pudpredict-favicon.svg' %}?v=8">
+  <link rel="shortcut icon" type="image/svg+xml" href="{% static 'assets/pudpredict-favicon.svg' %}?v=8">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+  <header class="site-header" data-header>
+    <nav class="nav-shell">
+      <a class="brand" href="{% url 'patients:landing' %}">
+        <span class="brand-mark"><i data-lucide="activity"></i></span>
+        <span>PUD<span class="brand-blue">Predict</span></span>
+      </a>
+      {% block nav %}
+      <button class="nav-toggle" type="button" data-nav-toggle aria-label="Open navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-links" data-nav-menu>
+        {% if user.is_authenticated %}
+          <a href="{% url 'patients:dashboard' %}" data-nav-match="/dashboard/">Dashboard</a>
+          <a href="{% url 'patients:assessment' %}" data-nav-match="/assessment/">New Assessment</a>
+          <a href="{% url 'patients:history' %}" data-nav-match="/patients/">Patient History</a>
+          <a href="{% url 'patients:reports' %}" data-nav-match="/reports/">Reports</a>
+          <a href="{% url 'patients:chatbot' %}" data-nav-match="/chatbot/">AI Advisor</a>
+          <form class="nav-logout" method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit"><i data-lucide="log-out"></i> Logout</button>
+          </form>
+        {% else %}
+          <a href="{% url 'login' %}" data-nav-match="/accounts/login/">Login</a>
+          <a class="nav-cta" href="{% url 'patients:register' %}" data-nav-match="/register/">Create Account</a>
+        {% endif %}
+      </div>
+      {% endblock %}
+    </nav>
+  </header>
+  {% if messages %}
+    <div class="toast-stack" data-toast-stack aria-live="polite" aria-atomic="true">
+      {% for message in messages %}
+        <div class="toast-message {{ message.tags }}" data-toast-message>
+          <span class="toast-icon"><i data-lucide="check"></i></span>
+          <span>{{ message }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  {% block content %}{% endblock %}
+  <footer class="footer">
+    <div class="page footer-inner">
+      <a class="brand footer-brand" href="{% url 'patients:landing' %}">
+        <span class="brand-mark"><i data-lucide="activity"></i></span>
+        <span>PUD<span class="brand-blue">Predict</span></span>
+      </a>
+      <span>Peptic Ulcer Disease Management System</span>
+      <span>&copy; 2026 All rights reserved.</span>
+    </div>
+  </footer>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>
+
+
+
+
+
+

@@ -1,0 +1,60 @@
+﻿{% extends "patients/base.html" %}
+{% load patient_extras %}
+{% block title %}Patient Dashboard | PUDPredict{% endblock %}
+{% block content %}
+<main class="app-frame page reveal">
+  <section class="app-title-row dashboard-heading">
+    <div>
+      <h1>Dashboard</h1>
+      <p class="lead">Peptic Ulcer Disease Management Overview</p>
+    </div>
+    <a class="btn" href="{% url 'patients:assessment' %}"><i data-lucide="plus"></i> New Assessment</a>
+  </section>
+
+  <section class="stats-grid">
+    <article class="stat-card">
+      <div><span>Total Patients</span><strong>{{ assessments|length }}</strong></div>
+      <div class="stat-icon blue"><i data-lucide="users"></i></div>
+    </article>
+    <article class="stat-card">
+      <div><span>Assessments</span><strong>{{ assessments|length }}</strong></div>
+      <div class="stat-icon green"><i data-lucide="activity"></i></div>
+    </article>
+    <article class="stat-card">
+      <div><span>High Risk Cases</span><strong>{% if latest_assessment and latest_assessment.severity == "High" %}1{% else %}0{% endif %}</strong></div>
+      <div class="stat-icon red"><i data-lucide="triangle-alert"></i></div>
+    </article>
+    <article class="stat-card">
+      <div><span>Avg Risk Score</span><strong>{% if latest_assessment %}{{ latest_assessment.risk_score }}%{% else %}0%{% endif %}</strong></div>
+      <div class="stat-icon purple"><i data-lucide="clipboard-list"></i></div>
+    </article>
+  </section>
+
+  <section class="table-card recent-card">
+    <div class="table-header">
+      <h2>Recent Predictions</h2>
+      <a href="{% url 'patients:history' %}">View All <i data-lucide="arrow-right"></i></a>
+    </div>
+    <div class="responsive-table">
+      <table>
+        <thead>
+          <tr><th>Patient</th><th>Risk Level</th><th>Score</th><th>Prediction</th><th>Date</th></tr>
+        </thead>
+        <tbody>
+          {% for assessment in assessments %}
+            <tr>
+              <td><strong>{{ assessment.patient.full_name }}</strong></td>
+              <td><span class="badge {{ assessment.severity|badge_class }}">{% if assessment.severity == "Medium" %}Moderate{% else %}{{ assessment.severity }}{% endif %}</span></td>
+              <td><strong>{{ assessment.risk_score }}%</strong></td>
+              <td>Duodenal Ulcer</td>
+              <td>{{ assessment.created_at|date:"d/m/Y" }}</td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="5" class="empty-state"><i data-lucide="activity"></i><span>No prediction record yet.</span></td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+{% endblock %}

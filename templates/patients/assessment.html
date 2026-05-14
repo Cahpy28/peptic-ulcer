@@ -1,0 +1,62 @@
+﻿{% extends "patients/base.html" %}
+{% block title %}Assessment | PUDPredict{% endblock %}
+{% block content %}
+<main class="app-frame page reveal">
+  <section class="app-title-row compact-title">
+    <div>
+      <h1>New Assessment</h1>
+      <p class="lead">Enter patient clinical parameters for peptic ulcer risk prediction.</p>
+    </div>
+  </section>
+
+  <form class="form-card assessment-card screenshot-form" method="post" data-loading-form>
+    {% csrf_token %}
+    <h3 class="form-section-title">Patient Information</h3>
+    <div class="field-grid two-cols">
+      <div class="field">{{ form.full_name.label_tag }}{{ form.full_name }}</div>
+      <div class="field">{{ form.phone.label_tag }}{{ form.phone }}</div>
+      <div class="field">{{ form.age.label_tag }}{{ form.age }}</div>
+      <div class="field">{{ form.gender.label_tag }}{{ form.gender }}</div>
+      <div class="field">{{ form.weight.label_tag }}{{ form.weight }}</div>
+      <div class="field">{{ form.pain_severity.label_tag }}{{ form.pain_severity }}</div>
+    </div>
+
+    <h3 class="form-section-title">Lifestyle Factors</h3>
+    <div class="field-grid two-cols">
+      <div class="field">{{ form.smoking_history.label_tag }}{{ form.smoking_history }}</div>
+      <div class="field">{{ form.alcohol_intake.label_tag }}{{ form.alcohol_intake }}</div>
+      <div class="field">{{ form.stress_level.label_tag }}{{ form.stress_level }}</div>
+      <div class="field">{{ form.diet_pattern.label_tag }}{{ form.diet_pattern }}</div>
+    </div>
+
+    <h3 class="form-section-title">Medical History &amp; Lab Results</h3>
+    <div class="field-grid two-cols">
+      <div class="field">{{ form.hpylori_status.label_tag }}{{ form.hpylori_status }}</div>
+      <div class="field">{{ form.diagnosis.label_tag }}{{ form.diagnosis }}</div>
+      <div class="field"><label for="id_hemoglobin">Hemoglobin (g/dL)</label><input class="input-control" id="id_hemoglobin" name="hemoglobin" placeholder="e.g. 13.5" type="number" step="0.1"></div>
+      <div class="field">{{ form.systolic_bp.label_tag }}{{ form.systolic_bp }}</div>
+      <div class="field">{{ form.diastolic_bp.label_tag }}{{ form.diastolic_bp }}</div>
+    </div>
+
+    <h3 class="form-section-title">Symptoms &amp; Conditions</h3>
+    <div class="toggle-grid">
+      <div class="condition-field switch-field"><span>Regular NSAID Use</span><span class="switch-wrap">{{ form.nsaid_use }}<button class="switch-control" type="button" data-switch-select data-on-value="yes" data-off-value="no" aria-label="Toggle Regular NSAID Use"><span></span></button></span></div>
+      <div class="condition-field switch-field"><span>Family History of Peptic Ulcer</span><span class="switch-wrap"><select class="input-control" name="family_history"><option value="no">No</option><option value="yes">Yes</option></select><button class="switch-control" type="button" data-switch-select data-on-value="yes" data-off-value="no" aria-label="Toggle Family History"><span></span></button></span></div>
+      <div class="condition-field switch-field"><span>Previous Ulcer History</span><span class="switch-wrap">{{ form.previous_ulcer }}<button class="switch-control" type="button" data-switch-select data-on-value="yes" data-off-value="no" aria-label="Toggle Previous Ulcer History"><span></span></button></span></div>
+      <div class="condition-field switch-field"><span>Epigastric Pain</span><span class="switch-wrap"><select class="input-control" name="epigastric_pain"><option value="no">No</option><option value="yes">Yes</option></select><button class="switch-control" type="button" data-switch-select data-on-value="yes" data-off-value="no" aria-label="Toggle Epigastric Pain"><span></span></button></span></div>
+      <div class="condition-field switch-field"><span>Nausea / Vomiting</span><span class="switch-wrap">{{ form.bleeding_symptoms }}<button class="switch-control" type="button" data-switch-select data-on-value="yes" data-off-value="no" aria-label="Toggle Nausea or Vomiting"><span></span></button></span></div>
+      <div class="condition-field switch-field"><span>Bloating</span><span class="switch-wrap"><select class="input-control" name="bloating"><option value="no">No</option><option value="yes">Yes</option></select><button class="switch-control" type="button" data-switch-select data-on-value="yes" data-off-value="no" aria-label="Toggle Bloating"><span></span></button></span></div>
+      <div class="condition-field switch-field"><span>Unexplained Weight Loss</span><span class="switch-wrap"><select class="input-control" name="weight_loss"><option value="no">No</option><option value="yes">Yes</option></select><button class="switch-control" type="button" data-switch-select data-on-value="yes" data-off-value="no" aria-label="Toggle Weight Loss"><span></span></button></span></div>
+    </div>
+    <div class="field full notes-field">{{ form.medications.label_tag }}{{ form.medications }}</div>
+    <div class="field full notes-field">{{ form.complications.label_tag }}{{ form.complications }}</div>
+    <div class="field full notes-field">{{ form.symptoms.label_tag }}{{ form.symptoms }}</div>
+
+    <div class="button-row form-actions-right">
+      <button class="btn" type="submit"><i data-lucide="brain"></i> Run Prediction</button>
+    </div>
+  </form>
+</main>
+{% endblock %}
+
+

@@ -1,0 +1,12 @@
+﻿{% extends "patients/base.html" %}
+{% block title %}Logged Out | PUDPredict{% endblock %}
+{% block content %}
+<main class="page auth-page">
+  <section class="page-hero logged-out-panel reveal">
+    <p class="eyebrow"><i data-lucide="shield"></i> Session Ended</p>
+    <h1>You are logged out</h1>
+    <p class="lead">Your secure patient session has ended. Sign in again to access protected records and reports.</p>
+    <div class="button-row" style="justify-content:center;"><a class="btn" href="{% url 'login' %}"><i data-lucide="log-in"></i> Login Again</a></div>
+  </section>
+</main>
+{% endblock %}

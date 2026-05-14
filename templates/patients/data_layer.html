@@ -1,0 +1,70 @@
+﻿{% extends "patients/base.html" %}
+{% block title %}Data Layer | PUDPredict{% endblock %}
+{% block content %}
+<main class="app-frame page reveal">
+  <section class="app-title-row compact-title">
+    <div>
+      <h1>Data Layer</h1>
+      <p class="lead">Upload real PUD datasets and connect research/drug-safety references for clinical transparency.</p>
+    </div>
+  </section>
+
+  <section class="report-shell data-layer-grid">
+    <article class="form-card">
+      <h2>Upload Real PUD Dataset</h2>
+      <p class="muted">Use CSV fields such as age, symptoms, NSAID use, H. pylori status, smoking/alcohol, diagnosis, medications, and complications.</p>
+      <form method="post" enctype="multipart/form-data" class="dataset-form">
+        {% csrf_token %}
+        <div class="field full">{{ form.file.label_tag }}{{ form.file }}{% if form.file.help_text %}<small>{{ form.file.help_text }}</small>{% endif %}</div>
+        <button class="btn" type="submit"><i data-lucide="upload"></i> Process Dataset</button>
+      </form>
+    </article>
+
+    <article class="form-card">
+      <h2>Latest Dataset Status</h2>
+      {% if latest %}
+        <p><strong>{{ latest.original_filename }}</strong></p>
+        <p class="muted">Rows processed: {{ latest.row_count }} | Status: {{ latest.status }}</p>
+        <p>{{ latest.message }}</p>
+        <h3>Required Field Coverage</h3>
+        <div class="coverage-list">
+          {% for field, matches in latest.column_profile.required_fields.items %}
+            <p><strong>{{ field|title }}</strong><span>{% if matches %}{{ matches|join:", " }}{% else %}Missing{% endif %}</span></p>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="muted">No dataset uploaded yet. Predictions currently use the built-in clinical risk profile.</p>
+      {% endif %}
+    </article>
+  </section>
+
+
+  <section class="table-card">
+    <h2>Train the XGBoost Model</h2>
+    <p class="muted">After downloading approved MIMIC-IV, MIMIC-IV-ED, eICU, or labeled hospital exports, save the cleaned CSV in the <strong>data</strong> folder and train the model from VS Code terminal.</p>
+    <pre class="code-block">python manage.py train_pud_model data\your_labeled_pud_dataset.csv</pre>
+    <p class="muted">The trained pipeline is saved to <strong>models\pud_xgboost_pipeline.joblib</strong>. Once that file exists, new assessments use the trained model automatically.</p>
+  </section>
+  <section class="table-card">
+    <h2>Uploaded Datasets</h2>
+    <div class="responsive-table">
+      <table>
+        <thead><tr><th>Dataset</th><th>Rows</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody>
+          {% for upload in uploads %}<tr><td>{{ upload.original_filename }}</td><td>{{ upload.row_count }}</td><td>{{ upload.status }}</td><td>{{ upload.created_at|date:"d/m/Y" }}</td></tr>{% empty %}<tr><td colspan="4">No uploads yet.</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="table-card">
+    <h2>Research Reference Connection</h2>
+    <p class="muted">PubMed E-utilities are queried for current PUD, H. pylori, and NSAID guidance references. OpenFDA drug labeling is used for medication safety warnings during assessment.</p>
+    <ul class="recommendations">
+      {% for ref in references %}<li><a href="{{ ref.url }}" target="_blank" rel="noopener">{{ ref.title }}</a> <span class="muted">{{ ref.published }}</span></li>{% endfor %}
+    </ul>
+  </section>
+</main>
+{% endblock %}
+
+

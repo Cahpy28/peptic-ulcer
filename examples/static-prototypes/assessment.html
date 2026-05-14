@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assessment | Intelligent PUD System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav-shell">
+      <a class="brand" href="index.html"><span class="brand-mark"><i data-lucide="activity"></i></span><span>PUD<span class="brand-blue">Predict</span></span></a>
+      <div class="nav-links">
+        <a href="patients.html">Patients</a><a href="predictions.html">Predictions</a><a href="reports.html">Reports</a><a href="architecture.html">Architecture</a><a class="nav-cta" href="assessment.html">Open App</a>
+      </div>
+    </nav>
+  </header>
+  <main class="page">
+    <section class="page-hero">
+      <p class="eyebrow"><i data-lucide="clipboard-plus"></i> Patient Data Processing</p>
+      <h1>PUD Risk Assessment</h1>
+      <p class="lead">Enter patient information, validate key risk factors, and run an XGBoost-style prediction that returns risk level and management recommendations.</p>
+    </section>
+    <section class="form-grid">
+      <form class="form-card" data-assessment-form>
+        <div class="field-grid">
+          <div class="field"><label for="name">Patient Name</label><input id="name" name="name" required placeholder="Enter full name"></div>
+          <div class="field"><label for="age">Age</label><input id="age" name="age" type="number" min="1" max="120" required placeholder="42"></div>
+          <div class="field"><label for="pain">Pain Severity</label><select id="pain" name="pain" required><option value="1">Mild</option><option value="2">Moderate</option><option value="3">Severe</option></select></div>
+          <div class="field"><label for="hpylori">H. pylori Status</label><select id="hpylori" name="hpylori" required><option value="unknown">Unknown</option><option value="negative">Negative</option><option value="positive">Positive</option></select></div>
+          <div class="field"><label for="nsaid">NSAID Use</label><select id="nsaid" name="nsaid" required><option value="no">No</option><option value="sometimes">Sometimes</option><option value="yes">Frequent</option></select></div>
+          <div class="field"><label for="bleeding">Bleeding Symptoms</label><select id="bleeding" name="bleeding" required><option value="no">No</option><option value="yes">Yes</option></select></div>
+          <div class="field"><label for="smoking">Smoking</label><select id="smoking" name="smoking" required><option value="no">No</option><option value="yes">Yes</option></select></div>
+          <div class="field"><label for="alcohol">Alcohol Intake</label><select id="alcohol" name="alcohol" required><option value="low">Low</option><option value="moderate">Moderate</option><option value="high">High</option></select></div>
+          <div class="field"><label for="stress">Stress Level</label><select id="stress" name="stress" required><option value="low">Low</option><option value="moderate">Moderate</option><option value="high">High</option></select></div>
+          <div class="field full"><label for="symptoms">Symptoms and Notes</label><textarea id="symptoms" name="symptoms" placeholder="Burning epigastric pain, nausea, weight loss, medication history"></textarea></div>
+        </div>
+        <div class="button-row">
+          <button class="btn" type="submit"><i data-lucide="activity"></i> Run XGBoost Prediction</button>
+          <button class="btn secondary" type="reset"><i data-lucide="rotate-ccw"></i> Reset</button>
+        </div>
+      </form>
+      <aside class="result-panel">
+        <p class="eyebrow"><i data-lucide="bar-chart-3"></i> Prediction Result</p>
+        <h2 data-severity>Medium Risk</h2>
+        <div class="score-ring" data-score-ring><div class="score-ring-inner"><strong data-score>43%</strong><span class="muted">risk score</span></div></div>
+        <h3>Recommendations</h3>
+        <ul class="recommendations" data-recommendations>
+          <li>Complete the assessment form and run prediction.</li>
+          <li>The system will display recommendations based on the model score.</li>
+        </ul>
+      </aside>
+    </section>
+  </main>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

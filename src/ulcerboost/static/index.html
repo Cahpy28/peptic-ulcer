@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PUDPredict | Intelligent PUD Management System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav-shell">
+      <a class="brand" href="index.html">
+        <span class="brand-mark"><i data-lucide="activity"></i></span>
+        <span>PUD<span class="brand-blue">Predict</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a class="nav-cta" href="assessment.html">Open App</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow"><i data-lucide="brain"></i> Powered by XGBoost Algorithm</p>
+        <h1>Intelligent <span class="text-blue">Peptic Ulcer</span> Disease Management</h1>
+        <p class="lead">Leverage the power of Extreme Gradient Boosting (XGBoost) for accurate peptic ulcer disease risk assessment, prediction, and clinical decision support.</p>
+        <div class="hero-actions">
+          <a class="btn" href="assessment.html"><i data-lucide="clipboard-plus"></i> Start Assessment</a>
+          <a class="btn secondary" href="architecture.html"><i data-lucide="network"></i> View System Flow</a>
+        </div>
+      </div>
+      <div class="hero-panel">
+        <div class="dashboard-preview">
+          <div class="preview-top">
+            <span class="preview-icon"><i data-lucide="bar-chart-3"></i></span>
+            <span>
+              <span class="preview-title">Risk Assessment</span>
+              <span class="preview-subtitle">XGBoost Prediction Model</span>
+            </span>
+          </div>
+          <div class="preview-body">
+            <div class="risk-gauge">
+              <div class="bar-row">
+                <div class="bar-label"><span>H. pylori Status</span><strong>87%</strong></div>
+                <div class="gauge-track"><div class="gauge-fill" style="--value:87%;--bar-color:#2563eb"></div></div>
+              </div>
+              <div class="bar-row">
+                <div class="bar-label"><span>NSAID Usage</span><strong>72%</strong></div>
+                <div class="gauge-track"><div class="gauge-fill" style="--value:72%;--bar-color:#2dd4bf"></div></div>
+              </div>
+              <div class="bar-row">
+                <div class="bar-label"><span>Smoking History</span><strong>65%</strong></div>
+                <div class="gauge-track"><div class="gauge-fill" style="--value:65%;--bar-color:#7c3aed"></div></div>
+              </div>
+              <div class="bar-row">
+                <div class="bar-label"><span>Stress Level</span><strong>58%</strong></div>
+                <div class="gauge-track"><div class="gauge-fill" style="--value:58%;--bar-color:#eabf52"></div></div>
+              </div>
+              <div class="bar-row">
+                <div class="bar-label"><span>Diet Pattern</span><strong>43%</strong></div>
+                <div class="gauge-track"><div class="gauge-fill" style="--value:43%;--bar-color:#ef4444"></div></div>
+              </div>
+              <div class="patient-row"><strong>Overall Risk</strong><span class="badge high">78%</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="section-heading">
+        <h2>Comprehensive PUD Management</h2>
+        <p>A full-featured intelligent system for peptic ulcer disease assessment, prediction, and clinical decision support.</p>
+      </div>
+      <div class="grid-3">
+        <article class="card">
+          <div class="card-icon"><i data-lucide="brain"></i></div>
+          <h3>XGBoost Prediction</h3>
+          <p>Advanced Extreme Gradient Boosting algorithm for accurate peptic ulcer disease risk assessment and classification.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon"><i data-lucide="stethoscope"></i></div>
+          <h3>Clinical Data Input</h3>
+          <p>Comprehensive patient data collection including symptoms, lab results, lifestyle factors, and medical history.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon"><i data-lucide="bar-chart-3"></i></div>
+          <h3>Risk Visualization</h3>
+          <p>Interactive charts displaying feature importance, risk scores, and contributing factors for each prediction.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section workflow-section">
+      <div class="section-heading">
+        <p class="section-kicker">SYSTEM WORKFLOW</p>
+        <h2>How It Works</h2>
+        <p>A streamlined process from data entry to prediction and clinical recommendations.</p>
+      </div>
+      <div class="workflow">
+        <div class="step">
+          <div class="step-icon"><i data-lucide="user-plus"></i><span class="step-number">01</span></div>
+          <strong>User Logs In</strong><span>Clinicians and authorized users securely access the system.</span>
+        </div>
+        <div class="step">
+          <div class="step-icon"><i data-lucide="clipboard-list"></i><span class="step-number">02</span></div>
+          <strong>Enter Patient Data</strong><span>Input comprehensive clinical data including symptoms and risk factors.</span>
+        </div>
+        <div class="step">
+          <div class="step-icon"><i data-lucide="cpu"></i><span class="step-number">03</span></div>
+          <strong>XGBoost Prediction</strong><span>The system validates data and generates a risk prediction.</span>
+        </div>
+        <div class="step">
+          <div class="step-icon"><i data-lucide="file-bar-chart"></i><span class="step-number">04</span></div>
+          <strong>Results & Reports</strong><span>View predictions, clinical recommendations, and export reports.</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="page">
+      <span>PUDPredict</span>
+      <span>Clinical decision support prototype</span>
+    </div>
+  </footer>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

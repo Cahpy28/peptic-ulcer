@@ -1,0 +1,14 @@
+{% extends "patients/base.html" %}
+{% block title %}Invalid Verification Link | PUDPredict{% endblock %}
+{% block content %}
+<main class="page auth-page">
+  <section class="logged-out-panel verify-panel reveal">
+    <p class="eyebrow"><i data-lucide="triangle-alert"></i> Verification Failed</p>
+    <h1>Link expired or invalid</h1>
+    <p class="lead">This verification link can no longer activate an account. Request a new link from the login page using the same email address.</p>
+    <div class="button-row">
+      <a class="btn" href="{% url 'login' %}"><i data-lucide="mail"></i> Resend Verification</a>
+    </div>
+  </section>
+</main>
+{% endblock %}

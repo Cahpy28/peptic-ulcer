@@ -1,0 +1,74 @@
+﻿{% extends "patients/base.html" %}
+{% block title %}PUDPredict | Intelligent PUD Management{% endblock %}
+{% block nav %}
+<button class="nav-toggle" type="button" data-nav-toggle aria-label="Open navigation" aria-expanded="false"><span></span><span></span><span></span></button>
+<div class="nav-links landing-nav" data-nav-menu>
+  <a href="#features">Features</a>
+  <a class="nav-cta" href="{% if user.is_authenticated %}{% url 'patients:dashboard' %}{% else %}{% url 'login' %}{% endif %}">Get Started</a>
+</div>
+{% endblock %}
+{% block content %}
+<main class="page landing-page">
+  <section class="hero reveal">
+    <div class="hero-copy">
+      <p class="eyebrow"><i data-lucide="stethoscope"></i> Peptic Ulcer Care</p>
+      <h1><span class="text-blue">Peptic Ulcer</span> Disease Management</h1>
+      <p class="lead">Track symptoms, review ulcer risk factors, identify possible gastric or duodenal ulcer patterns, and receive clear care guidance for timely clinical follow-up.</p>
+      <div class="hero-actions">
+        <a class="btn" href="{% if user.is_authenticated %}{% url 'patients:dashboard' %}{% else %}{% url 'login' %}{% endif %}"><i data-lucide="layout-dashboard"></i> Get Started</a>
+        <a class="btn secondary" href="#features"><i data-lucide="sparkles"></i> Features</a>
+      </div>
+    </div>
+    <div class="hero-panel">
+      <div class="dashboard-preview">
+        <div class="preview-top">
+          <span class="preview-icon"><i data-lucide="bar-chart-3"></i></span>
+          <span><span class="preview-title">Risk Assessment</span><span class="preview-subtitle">XGBoost Prediction Model</span></span>
+        </div>
+        <div class="preview-body">
+          <div class="risk-gauge">
+            <div class="bar-row"><div class="bar-label"><span>H. pylori Status</span><strong>87%</strong></div><div class="gauge-track"><div class="gauge-fill" style="--value:87%;--bar-color:#2563eb"></div></div></div>
+            <div class="bar-row"><div class="bar-label"><span>NSAID Usage</span><strong>72%</strong></div><div class="gauge-track"><div class="gauge-fill" style="--value:72%;--bar-color:#2dd4bf"></div></div></div>
+            <div class="bar-row"><div class="bar-label"><span>Smoking History</span><strong>65%</strong></div><div class="gauge-track"><div class="gauge-fill" style="--value:65%;--bar-color:#7c3aed"></div></div></div>
+            <div class="bar-row"><div class="bar-label"><span>Stress Level</span><strong>58%</strong></div><div class="gauge-track"><div class="gauge-fill" style="--value:58%;--bar-color:#eabf52"></div></div></div>
+            <div class="bar-row"><div class="bar-label"><span>Diet Pattern</span><strong>43%</strong></div><div class="gauge-track"><div class="gauge-fill" style="--value:43%;--bar-color:#ef4444"></div></div></div>
+            <div class="patient-row"><strong>Overall Risk</strong><span class="badge high">78%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section reveal" id="features">
+    <div class="section-heading">
+      <h2>Comprehensive PUD Management</h2>
+      <p>A full-featured intelligent system for peptic ulcer disease assessment, prediction, and clinical decision support.</p>
+    </div>
+    <div class="feature-grid screenshot-features">
+      <article class="card"><div class="card-icon"><i data-lucide="brain"></i></div><h3>XGBoost Prediction</h3><p>Advanced Extreme Gradient Boosting algorithm for accurate peptic ulcer disease risk assessment and classification.</p></article>
+      <article class="card"><div class="card-icon"><i data-lucide="stethoscope"></i></div><h3>Clinical Data Input</h3><p>Comprehensive patient data collection including symptoms, lab results, lifestyle factors, and medical history.</p></article>
+      <article class="card"><div class="card-icon"><i data-lucide="bar-chart-3"></i></div><h3>Risk Visualization</h3><p>Interactive charts displaying feature importance, risk scores, and contributing factors for each prediction.</p></article>
+      <article class="card"><div class="card-icon"><i data-lucide="history"></i></div><h3>Patient History</h3><p>Complete patient record management with longitudinal tracking of assessments and prediction outcomes.</p></article>
+      <article class="card"><div class="card-icon"><i data-lucide="file-text"></i></div><h3>Report Generation</h3><p>Generate detailed clinical reports with predictions, recommendations, and exportable documentation.</p></article>
+      <article class="card"><div class="card-icon"><i data-lucide="shield-check"></i></div><h3>Clinical Decision Support</h3><p>Evidence-based treatment recommendations and management guidance tailored to individual risk profiles.</p></article>
+    </div>
+  </section>
+
+  <section class="section workflow-section reveal">
+    <div class="section-heading">
+      <p class="section-kicker">SYSTEM WORKFLOW</p>
+      <h2>How It Works</h2>
+      <p>A streamlined process from data entry to prediction and clinical recommendations.</p>
+    </div>
+    <div class="workflow">
+      <div class="step"><div class="step-icon"><i data-lucide="user-plus"></i><b class="step-number">01</b></div><strong>User Logs In</strong><span>Clinicians and authorized users securely access the system.</span></div>
+      <div class="step"><div class="step-icon"><i data-lucide="clipboard-list"></i><b class="step-number">02</b></div><strong>Enter Patient Data</strong><span>Input comprehensive clinical data including symptoms and lab results.</span></div>
+      <div class="step"><div class="step-icon"><i data-lucide="activity"></i><b class="step-number">03</b></div><strong>Ulcer Risk Review</strong><span>The system reviews PUD indicators, likely triggers, ulcer type, and risk level.</span></div>
+      <div class="step"><div class="step-icon"><i data-lucide="file-bar-chart"></i><b class="step-number">04</b></div><strong>Results &amp; Reports</strong><span>View predictions, recommendations, and export clinical reports.</span></div>
+    </div>
+  </section>
+</main>
+{% endblock %}
+
+
+

@@ -1,0 +1,81 @@
+﻿{% extends "patients/base.html" %}
+{% load patient_extras %}
+{% block title %}Report | PUDPredict{% endblock %}
+{% block content %}
+<main class="page">
+  <section class="page-hero">
+    <p class="eyebrow"><i data-lucide="file-text"></i> Clinical Report</p>
+    <h1>{{ assessment.patient.full_name }}</h1>
+    <p class="lead">{{ assessment.patient.patient_code }} - {{ assessment.risk_score }}% {{ assessment.severity }} risk - {{ assessment.predicted_ulcer_type }}</p>
+  </section>
+  <section class="report-shell">
+    <article class="report-preview">
+      <header>
+        <div><h3>Intelligent PUD Management Report</h3><p class="muted">Dataset-aware XGBoost-style prediction summary with clinical transparency</p></div>
+        <strong>{{ assessment.patient.patient_code }}</strong>
+      </header>
+      <section>
+        <h3>Patient</h3>
+        <p>{{ assessment.patient.full_name }}, {{ assessment.patient.age }} years</p>
+      </section>
+      <section>
+        <h3>Health Metrics</h3>
+        <p>BP: {{ assessment.systolic_bp|default:"--" }}/{{ assessment.diastolic_bp|default:"--" }} mmHg - Weight: {{ assessment.weight|default:"--" }} kg</p>
+      </section>
+      <section>
+        <h3>Prediction</h3>
+        <p><span class="badge {{ assessment.severity|badge_class }}">{{ assessment.severity }}</span> {{ assessment.risk_score }}% estimated PUD management risk</p>
+        <p><strong>Ulcer Type:</strong> {{ assessment.predicted_ulcer_type }}</p>
+        <p><strong>PUD Status:</strong> {% if assessment.is_pud_positive %}PUD features indicated{% else %}Not strongly positive from entered data{% endif %}</p>
+      </section>
+      <section>
+        <h3>Clinical Notes</h3>
+        <p>{{ assessment.symptoms|default:"No additional notes supplied." }}</p>
+      </section>
+      <section>
+        <h3>Likely Causes</h3>
+        <ul class="recommendations">
+          {% for item in assessment.prediction_details.likely_causes %}
+            <li>{{ item }}</li>
+          {% empty %}
+            <li>No dominant cause identified.</li>
+          {% endfor %}
+        </ul>
+      </section>
+      <section>
+        <h3>Recommendations</h3>
+        <ul class="recommendations">
+          {% for item in assessment.recommendations %}
+            <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      </section>
+    </article>
+    <aside class="form-card">
+      <h2>Feature Importance</h2>
+      {% for name, value in assessment.feature_importance.items %}
+        <div class="bar-row"><div class="bar-label"><span>{{ name }}</span><strong>{{ value }}%</strong></div><div class="gauge-track"><div class="gauge-fill" style="--value:{{ value }}%;--bar-color:#2563eb"></div></div></div>
+      {% empty %}
+        <p class="muted">No feature importance data available.</p>
+      {% endfor %}
+      <div class="button-row">
+        <a class="btn" href="{% url 'patients:export_report' assessment.id %}"><i data-lucide="download"></i> Export Report</a>
+        <a class="btn secondary" href="{% url 'patients:assessment' %}"><i data-lucide="plus"></i> New Assessment</a>
+      </div>
+      <h2>Drug Safety Warnings</h2>
+      {% for item in assessment.drug_warnings %}
+        <p class="muted"><strong>{{ item.medication }}</strong>: {{ item.warning }}</p>
+      {% empty %}
+        <p class="muted">No OpenFDA medication warning was matched from entered medications.</p>
+      {% endfor %}
+      <h2>Research References</h2>
+      {% for ref in assessment.research_references %}
+        <p class="muted"><a href="{{ ref.url }}" target="_blank" rel="noopener">{{ ref.title }}</a></p>
+      {% empty %}
+        <p class="muted">No external reference was retrieved.</p>
+      {% endfor %}
+    </aside>
+  </section>
+</main>
+{% endblock %}
+

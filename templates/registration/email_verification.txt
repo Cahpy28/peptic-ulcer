@@ -1,0 +1,15 @@
+Hello {{ user.username }},
+
+Please verify your PUDPredict account before accessing the secure patient dashboard.
+
+Verification link:
+{{ verification_url }}
+
+Verification code:
+{{ verification_code }}
+
+This link expires in {{ expires_hours }} hours.
+
+PUDPredict protects patient access, keeps records tied to verified accounts, and gives transparent risk summaries for peptic ulcer disease management support.
+
+If you did not create this account, ignore this email.

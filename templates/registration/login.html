@@ -1,0 +1,52 @@
+﻿{% extends "patients/base.html" %}
+{% block title %}Login | PUDPredict{% endblock %}
+{% block content %}
+<main class="page auth-page">
+  <section class="auth-layout reveal">
+    <aside class="auth-info-panel">
+      <p class="eyebrow"><i data-lucide="lock"></i> Secure Access</p>
+      <h1>Patient Login</h1>
+      <p class="lead">Access your private PUD dashboard, symptom timeline, AI advisor, prediction history, and exportable clinical reports.</p>
+      <div class="rights-list">
+        <article><i data-lucide="shield-check"></i><span><strong>Access control</strong>Your records are visible only inside your signed-in account.</span></article>
+        <article><i data-lucide="eye"></i><span><strong>Transparency</strong>Every prediction displays risk score, confidence, risk factors, and recommendations.</span></article>
+        <article><i data-lucide="trash-2"></i><span><strong>Patient rights</strong>You can review history and delete saved patient records when needed.</span></article>
+      </div>
+    </aside>
+    <section class="auth-shell">
+      <form class="form-card auth-card" method="post">
+        {% csrf_token %}
+        <div class="auth-card-heading">
+          <h2>Welcome Back</h2>
+          <p>Sign in to continue securely.</p>
+        </div>
+        {% if form.non_field_errors %}<div class="auth-error">{{ form.non_field_errors }}</div>{% endif %}
+        <div class="field-grid">
+          {% for field in form %}
+            <div class="field full">{{ field.label_tag }}{% if field.field.widget.input_type == "password" %}<div class="password-wrap">{{ field }}<button class="password-toggle" type="button" data-password-toggle aria-label="Show password"><i data-lucide="eye"></i></button></div>{% else %}{{ field }}{% endif %}{% for error in field.errors %}<span class="muted">{{ error }}</span>{% endfor %}</div>
+          {% endfor %}
+        </div>
+        <div class="button-row auth-actions">
+          <button class="btn" type="submit"><i data-lucide="log-in"></i> Login</button>
+          <a class="btn secondary" href="{% url 'patients:register' %}">Create Account</a>
+        </div>
+        {% for error in form.non_field_errors %}
+          {% if "verify your email" in error|lower %}
+            <div class="resend-box">
+              <h3>Email not verified?</h3>
+              <p>Enter your account email and we will send a fresh secure verification link.</p>
+              <form method="post" action="{% url 'patients:resend_verification' %}">
+                {% csrf_token %}
+                <input class="input-control" type="email" name="email" placeholder="you@example.com" required>
+                <button class="btn secondary" type="submit"><i data-lucide="mail-check"></i> Resend Link</button>
+              </form>
+            </div>
+          {% endif %}
+        {% endfor %}
+        <p class="auth-note">This system supports wellness guidance and risk tracking. It does not replace professional medical diagnosis.</p>
+      </form>
+    </section>
+  </section>
+</main>
+{% endblock %}
+

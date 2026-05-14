@@ -1,0 +1,72 @@
+{% extends "patients/base.html" %}
+{% block title %}AI Advisor | PUDPredict{% endblock %}
+{% block content %}
+<main class="page advisor-page">
+  <section class="advisor-chat-shell reveal">
+    <header class="advisor-chat-header">
+      <div class="advisor-agent">
+        <span class="advisor-logo"><i data-lucide="activity"></i></span>
+        <div>
+          <p class="eyebrow">Peptic Ulcer Q&A Assistant</p>
+          <h1>PUDCare AI Advisor</h1>
+          <p><span class="online-dot"></span> Answers are limited to approved peptic-ulcer knowledge.</p>
+        </div>
+      </div>
+      <button class="icon-clear" type="button" data-clear-chat aria-label="Clear chat"><i data-lucide="trash-2"></i></button>
+    </header>
+
+    <div class="advisor-warning compact-warning">
+      <i data-lucide="shield-alert"></i>
+      <p>This AI gives non-diagnostic education only. Seek urgent care for vomiting blood, black stool, fainting, severe sudden pain, or persistent vomiting.</p>
+    </div>
+
+    <section class="advisor-chat-window" aria-label="PUDCare conversation">
+      <article class="chat-row ai">
+        <span class="chat-avatar"><i data-lucide="activity"></i></span>
+        <div class="chat-bubble">
+          <p>I can answer questions about peptic ulcer symptoms, H. pylori, NSAID risks, food and lifestyle triggers, warning signs, medication safety, and when to seek care.</p>
+          <p>Ask one clear question and I will answer using the approved PUD knowledge base.</p>
+        </div>
+      </article>
+
+      {% if asked_message %}
+        <article class="chat-row user">
+          <div class="chat-bubble">
+            <p>{{ asked_message }}</p>
+          </div>
+        </article>
+      {% endif %}
+
+      {% if response %}
+        <article class="chat-row ai advisor-response">
+          <span class="chat-avatar"><i data-lucide="stethoscope"></i></span>
+          <div class="chat-bubble">
+            <h2>AI Answer</h2>
+            <ul class="answer-list">
+              {% for item in response %}
+                <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </article>
+      {% endif %}
+    </section>
+
+    <div class="advisor-topic-bar" aria-label="Suggested peptic ulcer questions">
+      <button type="button" data-question="What symptoms suggest peptic ulcer disease?" data-auto-submit="true">PUD symptoms</button>
+      <button type="button" data-question="What is H. pylori and how does it affect ulcers?" data-auto-submit="true">H. pylori</button>
+      <button type="button" data-question="Are NSAIDs safe if I have ulcer symptoms?" data-auto-submit="true">NSAID risks</button>
+      <button type="button" data-question="What foods or habits can worsen peptic ulcer symptoms?" data-auto-submit="true">Food/lifestyle</button>
+      <button type="button" data-question="What warning signs need urgent care?" data-auto-submit="true">Warning signs</button>
+      <button type="button" data-question="What medication safety warnings should I know about ulcers?" data-auto-submit="true">Medication safety</button>
+    </div>
+
+    <form class="advisor-input qa-input" method="post" data-advisor-form>
+      {% csrf_token %}
+      <div class="advisor-hidden-severity">{{ form.severity_level }}</div>
+      {{ form.message }}
+      <button type="submit" aria-label="Ask AI"><i data-lucide="send"></i></button>
+    </form>
+  </section>
+</main>
+{% endblock %}

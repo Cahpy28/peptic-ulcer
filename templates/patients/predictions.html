@@ -1,0 +1,25 @@
+{% extends "patients/base.html" %}
+{% load patient_extras %}
+{% block title %}Predictions | PUDPredict{% endblock %}
+{% block content %}
+<main class="page">
+  <section class="page-hero reveal">
+    <p class="eyebrow"><i data-lucide="line-chart"></i> Prediction Results</p>
+    <h1>Prediction Dashboard</h1>
+    <p class="lead">Review model output, severity classification, and recommendation summaries.</p>
+  </section>
+  <section class="grid-3 section reveal" style="padding-top:8px;">
+    {% for assessment in assessments %}
+      <article class="card">
+        <div class="card-icon"><i data-lucide="activity"></i></div>
+        <h3>{{ assessment.patient.full_name }}</h3>
+        <p><strong>{{ assessment.risk_score }}% {{ assessment.severity }} risk</strong></p>
+        <p>{{ assessment.recommendations.0 }}</p>
+        <p><span class="badge {{ assessment.severity|badge_class }}">{{ assessment.severity }}</span></p>
+      </article>
+    {% empty %}
+      <article class="card"><h3>No Predictions Yet</h3><p>Run an assessment to generate prediction results.</p></article>
+    {% endfor %}
+  </section>
+</main>
+{% endblock %}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patients | Intelligent PUD System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav-shell">
+      <a class="brand" href="index.html"><span class="brand-mark"><i data-lucide="activity"></i></span><span>PUD<span class="brand-blue">Predict</span></span></a>
+      <div class="nav-links">
+        <a href="assessment.html">Assessment</a><a href="patients.html">Patients</a><a href="predictions.html">Predictions</a><a href="reports.html">Reports</a><a href="architecture.html">Architecture</a><a class="nav-cta" href="assessment.html">Open App</a>
+      </div>
+    </nav>
+  </header>
+  <main class="page">
+    <section class="page-hero">
+      <p class="eyebrow"><i data-lucide="users"></i> Patient History</p>
+      <h1>Patient Records</h1>
+      <p class="lead">A clean view of patient data, captured symptoms, risk category, and prediction score. New assessments are stored in the browser for this prototype.</p>
+    </section>
+    <section class="section" style="padding-top: 8px;">
+      <div class="table-card">
+        <table>
+          <thead><tr><th>Patient</th><th>Age</th><th>Clinical Input</th><th>Risk</th><th>Score</th></tr></thead>
+          <tbody data-patient-table></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

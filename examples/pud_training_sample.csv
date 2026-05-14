@@ -1,0 +1,13 @@
+﻿age,gender,symptoms,nsaid_use,hpylori_status,smoking,alcohol,diagnosis,diagnosis_code,ulcer_type,pud_positive,medications,complications
+59,male,"burning epigastric pain, night pain",yes,positive,yes,moderate,"duodenal ulcer",K26,duodenal,1,"ibuprofen","none"
+44,female,"bloating and nausea",no,negative,no,low,"non ulcer dyspepsia",R10,,0,"paracetamol","none"
+67,male,"black stool and severe upper abdominal pain",yes,unknown,yes,high,"gastric ulcer with bleeding",K25,gastric,1,"aspirin; diclofenac","bleeding"
+31,female,"mild heartburn after meals",no,negative,no,low,"reflux symptoms",K21,,0,"antacid","none"
+52,female,"upper abdominal pain after eating",sometimes,positive,no,low,"gastric ulcer",K25,gastric,1,"naproxen occasional","none"
+38,male,"nausea and bloating",no,negative,no,moderate,"functional dyspepsia",K30,,0,"none","none"
+73,female,"vomiting blood, epigastric pain",yes,positive,no,low,"peptic ulcer bleeding",K27,peptic,1,"aspirin","bleeding"
+46,male,"abdominal discomfort",no,unknown,yes,moderate,"no ulcer found",Z03,,0,"none","none"
+61,female,"night burning pain relieved by food",sometimes,positive,no,low,"duodenal ulcer",532,duodenal,1,"ibuprofen","none"
+28,male,"occasional indigestion",no,negative,no,low,"normal endoscopy",Z00,,0,"none","none"
+56,female,"early fullness and epigastric pain",no,positive,no,low,"gastric ulcer",531,gastric,1,"omeprazole","none"
+49,male,"heartburn with spicy foods",no,negative,yes,moderate,"gastritis without ulcer",K29,,0,"antacid","none"

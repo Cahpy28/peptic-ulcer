@@ -1,0 +1,120 @@
+﻿{% load static %}
+{% load patient_extras %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ assessment.patient.patient_code }} Report | PUDPredict</title>
+  <link rel="icon" type="image/svg+xml" href="{% static 'assets/pudpredict-favicon.svg' %}?v=8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --blue:#2563eb; --text:#020817; --muted:#64748b; --line:#dbe4ef; --bg:#f8fafc; --yellow:#fff8ba; --gold:#ca8a04; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family:Poppins, Arial, sans-serif; background:var(--bg); color:var(--text); }
+    .topbar { height:86px; display:flex; align-items:center; justify-content:space-between; padding:0 46px; background:#fff; border-bottom:1px solid var(--line); }
+    .brand { display:flex; align-items:center; gap:14px; font-weight:800; font-size:26px; text-decoration:none; color:var(--text); }
+    .brand-mark { width:54px; height:54px; border-radius:14px; background:var(--blue); display:grid; place-items:center; box-shadow:0 10px 22px rgba(37,99,235,.22); }
+    .brand-mark svg { width:34px; height:34px; }
+    .brand span span { color:var(--blue); }
+    .actions { display:flex; gap:12px; }
+    .btn { border:0; border-radius:14px; background:var(--blue); color:#fff; min-height:46px; padding:12px 20px; font:inherit; font-weight:700; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:8px; }
+    .btn.secondary { background:#fff; color:var(--text); border:1px solid var(--line); }
+    .sheet { width:min(1120px, calc(100% - 48px)); margin:46px auto 76px; background:#fff; border:1px solid var(--line); border-radius:18px; padding:42px; box-shadow:0 18px 45px rgba(15,23,42,.08); }
+    .title-row { display:flex; justify-content:space-between; gap:24px; border-bottom:1px solid var(--line); padding-bottom:24px; margin-bottom:28px; }
+    h1 { margin:0 0 8px; font-size:34px; line-height:1.15; }
+    .muted { color:var(--muted); margin:0; }
+    .summary { border:2px solid #cfe0ff; border-radius:16px; display:grid; grid-template-columns:190px 1fr; gap:36px; align-items:center; padding:34px; margin-bottom:34px; }
+    .risk-circle { width:160px; height:160px; border-radius:50%; background:var(--yellow); color:var(--gold); display:grid; place-items:center; align-content:center; }
+    .risk-circle strong { font-size:48px; line-height:1; }
+    .risk-circle span { font-weight:600; margin-top:8px; }
+    .summary h2 { color:var(--gold); margin:0 0 14px; font-size:30px; }
+    .summary h3 { margin:0 0 12px; font-size:25px; }
+    .meta-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:18px; margin-bottom:34px; }
+    .meta-card, .detail-card { border:1px solid var(--line); border-radius:15px; padding:22px; background:#fff; }
+    .meta-card span { display:block; color:var(--muted); text-transform:uppercase; font-weight:800; letter-spacing:.05em; font-size:13px; margin-bottom:8px; }
+    .meta-card strong { font-size:19px; }
+    .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:28px; }
+    .detail-card h2 { margin:0 0 20px; font-size:24px; }
+    ol, ul { margin:0; padding-left:24px; font-size:18px; line-height:1.65; }
+    li { margin-bottom:12px; }
+    .notes { margin-top:28px; }
+    .footer-note { margin-top:34px; padding-top:20px; border-top:1px solid var(--line); color:var(--muted); font-size:14px; }
+    @media (max-width:760px) { .topbar { padding:18px; height:auto; align-items:flex-start; gap:14px; flex-direction:column; } .sheet { width:calc(100% - 24px); margin:24px auto 48px; padding:22px; } .title-row, .summary { grid-template-columns:1fr; display:grid; } .meta-grid, .detail-grid { grid-template-columns:1fr; } h1 { font-size:26px; } .summary { padding:22px; } }
+    @media print { body { background:#fff; } .topbar .actions { display:none; } .topbar { border-bottom:0; padding:0 0 18px; height:auto; } .sheet { width:100%; margin:0; padding:0; border:0; box-shadow:none; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{% url 'patients:reports' %}">
+      <span class="brand-mark"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M12 33h9l5-14 10 30 6-20h10" fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span>PUD<span>Predict</span></span>
+    </a>
+    <div class="actions">
+      <button class="btn" onclick="window.print()">Print / Save PDF</button>
+      <a class="btn secondary" href="{% url 'patients:report_detail' assessment.id %}">Back to Preview</a>
+    </div>
+  </header>
+
+  <main class="sheet">
+    <section class="title-row">
+      <div>
+        <h1>PUD Risk Assessment Report</h1>
+        <p class="muted">Generated clinical prediction summary</p>
+      </div>
+      <strong>{{ assessment.patient.patient_code }}</strong>
+    </section>
+
+    <section class="summary">
+      <div class="risk-circle"><strong>{{ assessment.risk_score }}%</strong><span>Risk</span></div>
+      <div>
+        <h2>{% if assessment.severity == "Medium" %}Moderate{% else %}{{ assessment.severity }}{% endif %} Risk</h2>
+        <h3>{{ assessment.predicted_ulcer_type }}</h3>
+        <p>Model Confidence: <strong>{{ assessment.risk_score|add:4 }}%</strong></p>
+      </div>
+    </section>
+
+    <section class="meta-grid">
+      <div class="meta-card"><span>Patient Name</span><strong>{{ assessment.patient.full_name }}</strong></div>
+      <div class="meta-card"><span>Assessment Date</span><strong>{{ assessment.created_at|date:"d/m/Y" }}</strong></div>
+      <div class="meta-card"><span>Risk Score</span><strong>{{ assessment.risk_score }}%</strong></div>
+      <div class="meta-card"><span>Ulcer Type Prediction</span><strong>{{ assessment.predicted_ulcer_type }}</strong></div>
+      <div class="meta-card"><span>PUD Status</span><strong>{% if assessment.is_pud_positive %}Features indicated{% else %}Not strongly positive{% endif %}</strong></div>
+      <div class="meta-card"><span>Blood Pressure</span><strong>{{ assessment.systolic_bp|default:"--" }}/{{ assessment.diastolic_bp|default:"--" }} mmHg</strong></div>
+      <div class="meta-card"><span>Weight</span><strong>{{ assessment.weight|default:"--" }} kg</strong></div>
+    </section>
+
+    <section class="detail-grid">
+      <article class="detail-card">
+        <h2>Key Risk Factors</h2>
+        <ol>
+          {% for item in assessment.prediction_details.likely_causes %}<li>{{ item }}</li>{% empty %}<li>No dominant cause identified from entered data.</li>{% endfor %}
+        </ol>
+      </article>
+      <article class="detail-card">
+        <h2>Clinical Recommendations</h2>
+        <ul>
+          {% for item in assessment.recommendations %}
+            <li>{{ item }}</li>
+          {% empty %}
+            <li>Encourage medical follow-up for persistent or worsening symptoms.</li>
+            <li>Discuss H. pylori testing with a healthcare provider.</li>
+            <li>Avoid self-treatment with NSAIDs unless prescribed.</li>
+            <li>Use symptom tracking to identify meals, stress, or medication triggers.</li>
+          {% endfor %}
+        </ul>
+      </article>
+    </section>
+
+    <section class="detail-card notes">
+      <h2>Clinical Notes</h2>
+      <p>{{ assessment.symptoms|default:"No additional notes supplied." }}</p>
+    </section>
+
+    <p class="footer-note">This report supports clinical review and is not a standalone diagnosis. Final decisions should be made by qualified healthcare professionals.</p>
+  </main>
+</body>
+</html>
+

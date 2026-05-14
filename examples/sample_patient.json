@@ -1,0 +1,11 @@
+{
+  "name": "Demo Patient",
+  "age": 42,
+  "pain_severity": 3,
+  "hpylori_status": "unknown",
+  "nsaid_use": "sometimes",
+  "bleeding_symptoms": "no",
+  "smoking_history": "no",
+  "alcohol_intake": "moderate",
+  "stress_level": "high"
+}

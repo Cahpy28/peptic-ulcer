@@ -1,0 +1,3 @@
+age,gender,symptoms,nsaid_use,hpylori_status,smoking,alcohol,diagnosis,diagnosis_code,ulcer_type,pud_positive,medications,complications
+45,male,"burning epigastric pain at night",yes,positive,no,low,duodenal ulcer,K26,duodenal,1,"ibuprofen,omeprazole",none
+52,female,"dyspepsia and nausea",no,negative,no,low,no peptic ulcer,,none,0,paracetamol,none

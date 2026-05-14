@@ -1,0 +1,19 @@
+﻿{% extends "patients/base.html" %}
+{% block title %}Architecture | PUDPredict{% endblock %}
+{% block content %}
+<main class="page architecture-page reveal">
+  <section class="page-hero centered-hero">
+    <p class="eyebrow"><i data-lucide="network"></i> System Analysis</p>
+    <h1>Layered Intelligence Architecture</h1>
+    <p class="lead">The system follows a clean presentation, application, prediction, and data-storage workflow for reliable peptic ulcer disease management.</p>
+  </section>
+
+  <section class="layer-flow-ui">
+    <article class="layer-card presentation"><i data-lucide="monitor-smartphone"></i><div><h2>Presentation Layer</h2><p>Web and mobile user interface for clinical input, patient review, and result visualization.</p></div></article>
+    <span class="flow-line"></span>
+    <article class="layer-card application"><i data-lucide="cpu"></i><div><h2>Application Layer</h2><p>Django views, validation, patient management, simulated XGBoost prediction, and report generation.</p></div></article>
+    <span class="flow-line"></span>
+    <article class="layer-card data"><i data-lucide="database"></i><div><h2>Data Layer</h2><p>Secure database storage for patient records, prediction history, and clinical information.</p></div></article>
+  </section>
+</main>
+{% endblock %}

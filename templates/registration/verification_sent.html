@@ -1,0 +1,58 @@
+{% extends "patients/base.html" %}
+{% block title %}Verify Email | PUDPredict{% endblock %}
+{% block content %}
+<main class="page auth-page">
+  <section class="verification-layout reveal">
+    <div class="verification-hero">
+      <span class="verification-icon"><i data-lucide="mail-check"></i></span>
+      <p class="eyebrow">Secure Account Verification</p>
+      <h1>Check your email</h1>
+      <p class="lead">A verification link and 6-digit code have been sent to your inbox. Use either option to activate your secure PUDPredict account.</p>
+      <div class="verification-trust">
+        <span><i data-lucide="shield-check"></i> Patient access control</span>
+        <span><i data-lucide="lock-keyhole"></i> Verified records</span>
+        <span><i data-lucide="timer"></i> Time-limited code</span>
+      </div>
+    </div>
+
+    <form class="form-card verification-card" method="post" novalidate>
+      {% csrf_token %}
+      <div class="auth-card-heading">
+        <h2>Enter Verification Code</h2>
+        <p>Type the code from your email or open the verification link in the message.</p>
+      </div>
+      {% if form.non_field_errors %}<div class="auth-error">{{ form.non_field_errors }}</div>{% endif %}
+      <div class="field-grid">
+        <div class="field full">
+          {{ form.email.label_tag }}
+          {{ form.email }}
+          {% for error in form.email.errors %}<span class="muted">{{ error }}</span>{% endfor %}
+        </div>
+        <div class="field full">
+          {{ form.code.label_tag }}
+          {{ form.code }}
+          {% for error in form.code.errors %}<span class="muted">{{ error }}</span>{% endfor %}
+        </div>
+      </div>
+      <div class="button-row auth-actions">
+        <button class="btn" type="submit"><i data-lucide="badge-check"></i> Verify Code</button>
+        <a class="btn secondary" href="{% url 'login' %}">Back to Login</a>
+      </div>
+      <p class="auth-note">Did not receive it? Try checking spam, then resend from the login page with the same email.</p>
+    </form>
+  </section>
+
+  {% if show_verification_modal %}
+    <div class="verification-popout is-visible" data-verification-popout>
+      <div class="verification-popout-card">
+        <button class="verification-popout-close" type="button" data-close-verification-popout aria-label="Close message">
+          <i data-lucide="x"></i>
+        </button>
+        <span class="verification-popout-icon"><i data-lucide="send"></i></span>
+        <h2>Verification Sent</h2>
+        <p>A secure verification code and link have been sent to <strong>{{ pending_email }}</strong>.</p>
+      </div>
+    </div>
+  {% endif %}
+</main>
+{% endblock %}

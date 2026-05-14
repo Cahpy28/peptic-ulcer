@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports | Intelligent PUD System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav-shell">
+      <a class="brand" href="index.html"><span class="brand-mark"><i data-lucide="activity"></i></span><span>PUD<span class="brand-blue">Predict</span></span></a>
+      <div class="nav-links">
+        <a href="assessment.html">Assessment</a><a href="patients.html">Patients</a><a href="predictions.html">Predictions</a><a href="reports.html">Reports</a><a href="architecture.html">Architecture</a><a class="nav-cta" href="assessment.html">Open App</a>
+      </div>
+    </nav>
+  </header>
+  <main class="page">
+    <section class="page-hero">
+      <p class="eyebrow"><i data-lucide="file-down"></i> Generate and Export</p>
+      <h1>Clinical Report</h1>
+      <p class="lead">Select a patient assessment and generate a professional report containing patient details, model result, clinical notes, and recommendations.</p>
+    </section>
+    <section class="report-shell">
+      <form class="form-card" data-report-form>
+        <div class="field-grid">
+          <div class="field full"><label for="patient">Patient Record</label><select id="patient" name="patient" data-report-patient></select></div>
+          <div class="field full"><label for="format">Export Format</label><select id="format" name="format"><option>PDF Report</option><option>Clinical Summary</option><option>Referral Note</option></select></div>
+          <div class="field full"><label for="comments">Additional Comments</label><textarea id="comments" name="comments" placeholder="Add clinician notes before export"></textarea></div>
+        </div>
+        <div class="button-row">
+          <button class="btn" type="submit"><i data-lucide="file-text"></i> Generate Report</button>
+          <button class="btn secondary" type="button" onclick="window.print()"><i data-lucide="printer"></i> Print</button>
+        </div>
+      </form>
+      <article class="report-preview" data-report-preview></article>
+    </section>
+  </main>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

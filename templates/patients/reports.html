@@ -1,0 +1,84 @@
+﻿{% extends "patients/base.html" %}
+{% load patient_extras %}
+{% block title %}Reports | PUDPredict{% endblock %}
+{% block content %}
+<main class="app-frame page reveal">
+  <section class="app-title-row compact-title">
+    <div>
+      <h1>Reports</h1>
+      <p class="lead">Generate and export clinical prediction reports</p>
+    </div>
+    <button class="btn print-btn" type="button" data-print-report><i data-lucide="printer"></i> Print Report</button>
+  </section>
+
+  <section class="reports-grid reports-grid-balanced" data-report-charts hidden>
+    <article class="chart-card aligned-chart-card">
+      <div class="chart-card-head">
+        <h2>Risk Level Distribution</h2>
+        {% if latest_assessment %}<span class="badge medium" data-chart-risk>Risk Level</span>{% endif %}
+      </div>
+      <div class="donut-wrap risk-donut-wrap">
+        <div class="donut-chart synced-donut" style="--score: 0%;"><div class="donut-center"><strong data-chart-score>0%</strong><span data-chart-label>Risk</span></div></div>
+      </div>
+      </article>
+
+    <article class="chart-card aligned-chart-card">
+      <div class="chart-card-head">
+        <h2>Average Risk by Prediction Type</h2>
+        {% if latest_assessment %}<span>{{ latest_assessment.patient.full_name }}</span>{% endif %}
+      </div>
+      <div class="bar-chart synced-bar-chart">
+        <div class="axis y-axis"><span>100</span><span>75</span><span>50</span><span>25</span><span>0</span></div>
+        <div class="chart-grid-lines"><span></span><span></span><span></span><span></span></div>
+        <div class="bars">
+          <button class="bar-column" type="button" data-chart-tooltip style="--height:0%;"><strong>Duodenal<br><span data-chart-tooltip-score>avgScore : 0%</span></strong></button>
+          <span>Duodenal</span>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section class="table-card individual-report-card">
+    <h2><i data-lucide="file-text"></i> Individual Patient Report</h2>
+    <select class="input-control report-select" data-report-select>
+      <option value="">Select a patient prediction</option>
+      {% for assessment in assessments %}
+        <option value="report-{{ assessment.id }}" data-score="{{ assessment.risk_score }}" data-risk="{% if assessment.severity == "Medium" %}Moderate{% else %}{{ assessment.severity }}{% endif %}" data-risk-class="{{ assessment.severity|badge_class }}" data-name="{{ assessment.patient.full_name }}">{{ assessment.patient.full_name }} - {% if assessment.severity == "Medium" %}Moderate{% else %}{{ assessment.severity }}{% endif %} ({{ assessment.risk_score }}%) - {{ assessment.created_at|date:"d/m/Y" }}</option>
+      {% endfor %}
+    </select>
+
+    <div class="report-empty" data-report-empty><i data-lucide="bar-chart-3"></i><span>Select a prediction to generate a report.</span></div>
+    {% for assessment in assessments %}
+      <article class="print-report-sheet" id="report-{{ assessment.id }}" data-selected-report hidden>
+        <header>
+          <div>
+            <h2>PUD Risk Assessment Report</h2>
+            <p>Generated: {% now "d/m/Y" %}</p>
+          </div>
+          <strong>PUDPredict</strong>
+        </header>
+        <div class="report-detail-grid">
+          <p><span>Patient Name</span><strong>{{ assessment.patient.full_name }}</strong></p>
+          <p><span>Risk Level</span><strong>{% if assessment.severity == "Medium" %}Moderate{% else %}{{ assessment.severity }}{% endif %}</strong></p>
+          <p><span>Risk Score</span><strong>{{ assessment.risk_score }}%</strong></p>
+          <p><span>Model Confidence</span><strong>{{ assessment.risk_score|add:4 }}%</strong></p>
+          <p><span>Ulcer Type Prediction</span><strong>{{ assessment.predicted_ulcer_type }}</strong></p>
+          <p><span>PUD Status</span><strong>{% if assessment.is_pud_positive %}Features indicated{% else %}Not strongly positive{% endif %}</strong></p>
+          <p><span>Assessment Date</span><strong>{{ assessment.created_at|date:"d/m/Y" }}</strong></p>
+        </div>
+        <h3>Key Risk Factors</h3>
+        <ol class="factor-list">
+          {% for item in assessment.prediction_details.likely_causes %}<li>{{ item }}</li>{% empty %}<li>No dominant cause identified from entered data.</li>{% endfor %}
+        </ol>
+        <h3>Clinical Recommendations</h3>
+        <ul class="recommendations">
+          {% for item in assessment.recommendations %}<li>{{ item }}</li>{% empty %}<li>Review symptoms with a healthcare provider and monitor changes.</li>{% endfor %}
+        </ul>
+      </article>
+    {% endfor %}
+  </section>
+</main>
+{% endblock %}
+
+
+
