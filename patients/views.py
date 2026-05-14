@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login
+from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -7,7 +8,7 @@ from django.utils import timezone
 from .forms import ChatbotForm, EmailCodeVerificationForm, PatientAssessmentForm, PatientRegistrationForm, PUDDatasetUploadForm, SymptomLogForm
 from .data_services import fetch_openfda_warnings, fetch_pubmed_references, process_pud_dataset_upload
 from .decorators import verified_login_required
-from .email_verification import send_verification_email, verify_code, verify_token
+from .email_verification import EmailVerificationDeliveryError, send_verification_email, verify_code, verify_token
 from .ml import chatbot_guidance, simulated_xgboost_prediction, symptom_log_risk
 from .models import Assessment, Patient, PUDDatasetUpload, SymptomLog
 
@@ -23,13 +24,17 @@ def register(request):
     if request.method == "POST":
         form = PatientRegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.is_active = False
-            user.save()
-            send_verification_email(request, user)
-            request.session["pending_verification_email"] = user.email
-            messages.success(request, "Verification code and link sent to your email.")
-            return redirect("patients:verification_sent")
+            try:
+                with transaction.atomic():
+                    user = form.save(commit=False)
+                    user.is_active = False
+                    user.save()
+                    send_verification_email(request, user)
+                request.session["pending_verification_email"] = user.email
+                messages.success(request, "Verification code and link sent to your email.")
+                return redirect("patients:verification_sent")
+            except EmailVerificationDeliveryError as exc:
+                form.add_error(None, str(exc))
     else:
         form = PatientRegistrationForm()
     return render(request, "registration/register.html", {"form": form})

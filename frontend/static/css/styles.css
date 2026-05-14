@@ -3378,6 +3378,34 @@ main.page {
   }
 }
 
+.auth-link-row {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+}
+
+.auth-link-row a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--brand);
+  font-weight: 800;
+  text-decoration: none;
+  padding: 10px 14px;
+  border-radius: 999px;
+  transition: background 180ms ease, transform 180ms ease;
+}
+
+.auth-link-row a:hover {
+  background: #eff6ff;
+  transform: translateY(-1px);
+}
+
+.auth-link-row svg {
+  width: 18px;
+  height: 18px;
+}
+
 @media (max-width: 1024px) and (min-width: 761px) {
   .nav-shell {
     display: grid !important;

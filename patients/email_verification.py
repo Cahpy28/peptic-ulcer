@@ -8,9 +8,14 @@ from django.utils import timezone
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from datetime import timedelta
+from smtplib import SMTPException
 import secrets
 
 from .models import EmailVerificationCode
+
+
+class EmailVerificationDeliveryError(Exception):
+    pass
 
 
 class EmailVerificationTokenGenerator(PasswordResetTokenGenerator):
@@ -76,6 +81,21 @@ def verify_code(email, code):
 
 
 def send_verification_email(request, user):
+    if settings.EMAIL_BACKEND.endswith("smtp.EmailBackend"):
+        missing = [
+            name
+            for name, value in {
+                "EMAIL_HOST": settings.EMAIL_HOST,
+                "EMAIL_HOST_USER": settings.EMAIL_HOST_USER,
+                "EMAIL_HOST_PASSWORD": settings.EMAIL_HOST_PASSWORD,
+            }.items()
+            if not value
+        ]
+        if missing:
+            raise EmailVerificationDeliveryError(
+                "Email verification is not fully configured. Missing: " + ", ".join(missing)
+            )
+
     verification_url = make_verification_url(request, user)
     verification_code = create_verification_code(user)
     context = {
@@ -84,10 +104,15 @@ def send_verification_email(request, user):
         "verification_code": verification_code,
         "expires_hours": max(1, settings.EMAIL_VERIFICATION_MAX_AGE // 3600),
     }
-    subject = "Verify your PUDPredict account"
+    subject = "Verify your Peptic Ulcer Disease account"
     text_body = render_to_string("registration/email_verification.txt", context)
     html_body = render_to_string("registration/email_verification.html", context)
     message = EmailMultiAlternatives(subject, text_body, settings.DEFAULT_FROM_EMAIL, [user.email])
     message.attach_alternative(html_body, "text/html")
-    message.send()
+    try:
+        message.send(fail_silently=False)
+    except (SMTPException, OSError) as exc:
+        raise EmailVerificationDeliveryError(
+            "We could not send the verification email right now. Please check the email settings and try again."
+        ) from exc
     return verification_url, verification_code
