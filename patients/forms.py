@@ -7,21 +7,48 @@ from .models import Assessment, Patient, PUDDatasetUpload, SymptomLog
 
 
 class VerifiedAuthenticationForm(AuthenticationForm):
+    error_messages = {
+        "invalid_login": (
+            "No active account matched those details. Use the username or email you created on this live site, "
+            "check the password, or create a new account if this was only saved on localhost."
+        ),
+        "inactive": "Please verify your email before signing in. You can resend the verification link and code below.",
+    }
+    username = forms.CharField(label="Username or Email")
+
     def clean(self):
         username = self.cleaned_data.get("username")
         password = self.cleaned_data.get("password")
         if username is not None and password:
+            login_identifier = username.strip()
+            user_lookup = None
+            if "@" in login_identifier:
+                user_lookup = User.objects.filter(email__iexact=login_identifier).first()
+                if user_lookup:
+                    username = user_lookup.get_username()
+                    self.cleaned_data["username"] = username
             self.user_cache = authenticate(self.request, username=username, password=password)
             if self.user_cache is None:
                 inactive_user = User.objects.filter(username__iexact=username, is_active=False).first()
+                if not inactive_user and "@" in login_identifier:
+                    inactive_user = User.objects.filter(email__iexact=login_identifier, is_active=False).first()
                 if inactive_user and inactive_user.check_password(password):
                     raise forms.ValidationError(
-                        "Please verify your email before signing in. You can resend the verification link below.",
+                        "Please verify your email before signing in. You can resend the verification link and code below.",
                         code="inactive",
                     )
                 raise self.get_invalid_login_error()
             self.confirm_login_allowed(self.user_cache)
         return self.cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["username"].widget.attrs.update(
+            {"class": "input-control", "placeholder": "Username or email address", "autocomplete": "username"}
+        )
+        self.fields["password"].widget.attrs.update(
+            {"class": "input-control", "placeholder": "Enter password", "autocomplete": "current-password"}
+        )
 
 
 class PatientRegistrationForm(UserCreationForm):
