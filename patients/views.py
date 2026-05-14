@@ -1,9 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login
-from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
+import logging
 
 from .forms import ChatbotForm, EmailCodeVerificationForm, PatientAssessmentForm, PatientRegistrationForm, PUDDatasetUploadForm, SymptomLogForm
 from .data_services import fetch_openfda_warnings, fetch_pubmed_references, process_pud_dataset_upload
@@ -11,6 +11,9 @@ from .decorators import verified_login_required
 from .email_verification import EmailVerificationDeliveryError, send_verification_email, verify_code, verify_token
 from .ml import chatbot_guidance, simulated_xgboost_prediction, symptom_log_risk
 from .models import Assessment, Patient, PUDDatasetUpload, SymptomLog
+
+
+logger = logging.getLogger(__name__)
 
 
 def landing(request):
@@ -22,19 +25,43 @@ def register(request):
         return redirect("patients:dashboard")
 
     if request.method == "POST":
+        posted_email = request.POST.get("email", "").strip().lower()
+        if posted_email:
+            User = get_user_model()
+            existing_user = User.objects.filter(email__iexact=posted_email).first()
+            if existing_user and not existing_user.is_active:
+                request.session["pending_verification_email"] = existing_user.email
+                try:
+                    send_verification_email(request, existing_user)
+                    messages.success(request, "This email already has an unverified account. A fresh verification code and link have been sent.")
+                except EmailVerificationDeliveryError:
+                    logger.exception("Verification resend failed during registration for %s", existing_user.email)
+                    messages.error(
+                        request,
+                        "This email already has an unverified account, but the verification email could not be sent. Check Gmail SMTP settings on Render, then use Resend Link.",
+                    )
+                return redirect("patients:verification_sent")
+            if existing_user and existing_user.is_active:
+                messages.info(request, "An account with this email already exists. Please login or use Forgot Password.")
+                return redirect("login")
+
         form = PatientRegistrationForm(request.POST)
         if form.is_valid():
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+            request.session["pending_verification_email"] = user.email
             try:
-                with transaction.atomic():
-                    user = form.save(commit=False)
-                    user.is_active = False
-                    user.save()
-                    send_verification_email(request, user)
-                request.session["pending_verification_email"] = user.email
+                send_verification_email(request, user)
                 messages.success(request, "Verification code and link sent to your email.")
-                return redirect("patients:verification_sent")
             except EmailVerificationDeliveryError as exc:
-                form.add_error(None, str(exc))
+                logger.exception("Verification email delivery failed for %s", user.email)
+                messages.error(
+                    request,
+                    "Your account was created, but the verification email could not be sent. Check Gmail SMTP settings on Render, then use Resend Link.",
+                )
+            return redirect("patients:verification_sent")
+        logger.info("Registration form invalid: %s", form.errors.as_json())
     else:
         form = PatientRegistrationForm()
     return render(request, "registration/register.html", {"form": form})
