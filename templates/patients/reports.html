@@ -1,6 +1,6 @@
-﻿{% extends "patients/base.html" %}
+{% extends "patients/base.html" %}
 {% load patient_extras %}
-{% block title %}Reports | PUDPredict{% endblock %}
+{% block title %}Reports | Peptic Ulcer Disease{% endblock %}
 {% block content %}
 <main class="app-frame page reveal">
   <section class="app-title-row compact-title">
@@ -55,7 +55,7 @@
             <h2>PUD Risk Assessment Report</h2>
             <p>Generated: {% now "d/m/Y" %}</p>
           </div>
-          <strong>PUDPredict</strong>
+          <strong>Peptic Ulcer Disease</strong>
         </header>
         <div class="report-detail-grid">
           <p><span>Patient Name</span><strong>{{ assessment.patient.full_name }}</strong></p>

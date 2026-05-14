@@ -1,5 +1,5 @@
-﻿{% extends "patients/base.html" %}
-{% block title %}Create Account | PUDPredict{% endblock %}
+{% extends "patients/base.html" %}
+{% block title %}Create Account | Peptic Ulcer Disease{% endblock %}
 {% block content %}
 <main class="page auth-page">
   <section class="auth-layout reveal">
@@ -22,7 +22,7 @@
         {% csrf_token %}
         <div class="auth-card-heading">
           <h2>Start Securely</h2>
-          <p>Create your protected PUDPredict workspace.</p>
+          <p>Create your protected Peptic Ulcer Disease workspace.</p>
         </div>
         {% if form.non_field_errors %}<div class="auth-error">{{ form.non_field_errors }}</div>{% endif %}
         <div class="field-grid">

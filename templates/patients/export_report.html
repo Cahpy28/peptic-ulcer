@@ -1,11 +1,11 @@
-﻿{% load static %}
+{% load static %}
 {% load patient_extras %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ assessment.patient.patient_code }} Report | PUDPredict</title>
+  <title>{{ assessment.patient.patient_code }} Report | Peptic Ulcer Disease</title>
   <link rel="icon" type="image/svg+xml" href="{% static 'assets/pudpredict-favicon.svg' %}?v=8">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,7 +50,7 @@
   <header class="topbar">
     <a class="brand" href="{% url 'patients:reports' %}">
       <span class="brand-mark"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M12 33h9l5-14 10 30 6-20h10" fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-      <span>PUD<span>Predict</span></span>
+      <span>Peptic <span>Ulcer Disease</span></span>
     </a>
     <div class="actions">
       <button class="btn" onclick="window.print()">Print / Save PDF</button>
@@ -61,7 +61,7 @@
   <main class="sheet">
     <section class="title-row">
       <div>
-        <h1>PUD Risk Assessment Report</h1>
+        <h1>Peptic Ulcer Disease Risk Assessment Report</h1>
         <p class="muted">Generated clinical prediction summary</p>
       </div>
       <strong>{{ assessment.patient.patient_code }}</strong>

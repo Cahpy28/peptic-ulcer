@@ -1,12 +1,12 @@
-﻿{% load static %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}PUDPredict{% endblock %}</title>
-  <link rel="icon" type="image/svg+xml" href="{% static 'assets/pudpredict-favicon.svg' %}?v=8">
-  <link rel="shortcut icon" type="image/svg+xml" href="{% static 'assets/pudpredict-favicon.svg' %}?v=8">
+  <title>{% block title %}Peptic Ulcer Disease{% endblock %}</title>
+  <link rel="icon" type="image/svg+xml" href="{% static 'assets/pudpredict-favicon.svg' %}?v=9">
+  <link rel="shortcut icon" type="image/svg+xml" href="{% static 'assets/pudpredict-favicon.svg' %}?v=9">
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
@@ -14,7 +14,7 @@
     <nav class="nav-shell">
       <a class="brand" href="{% url 'patients:landing' %}">
         <span class="brand-mark"><i data-lucide="activity"></i></span>
-        <span>PUD<span class="brand-blue">Predict</span></span>
+        <span>Peptic <span class="brand-blue">Ulcer Disease</span></span>
       </a>
       {% block nav %}
       <button class="nav-toggle" type="button" data-nav-toggle aria-label="Open navigation" aria-expanded="false">
@@ -54,7 +54,7 @@
     <div class="page footer-inner">
       <a class="brand footer-brand" href="{% url 'patients:landing' %}">
         <span class="brand-mark"><i data-lucide="activity"></i></span>
-        <span>PUD<span class="brand-blue">Predict</span></span>
+        <span>Peptic <span class="brand-blue">Ulcer Disease</span></span>
       </a>
       <span>Peptic Ulcer Disease Management System</span>
       <span>&copy; 2026 All rights reserved.</span>
