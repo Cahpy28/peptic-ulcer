@@ -3406,6 +3406,26 @@ main.page {
   height: 18px;
 }
 
+.auth-error-summary {
+  margin-bottom: 20px !important;
+  text-align: left !important;
+}
+
+.auth-error-summary strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.auth-error-summary ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.auth-error-summary li {
+  margin: 5px 0;
+  line-height: 1.45;
+}
+
 @media (max-width: 1024px) and (min-width: 761px) {
   .nav-shell {
     display: grid !important;
@@ -4534,7 +4554,7 @@ body.modal-open {
   color: var(--pud-muted) !important;
   line-height: 1.45 !important;
 }
-.resend-box form {
+.resend-box-standalone {
   display: grid !important;
   grid-template-columns: 1fr auto !important;
   gap: 12px !important;
@@ -4636,7 +4656,7 @@ body.modal-open {
   .auth-actions .btn {
     width: 100% !important;
   }
-  .resend-box form {
+  .resend-box-standalone {
     grid-template-columns: 1fr !important;
   }
   .resend-box .btn {
@@ -5028,4 +5048,17 @@ body.modal-open {
     padding: 7px 12px;
     font-size: 0.82rem;
   }
+}
+/* Final auth resilience polish */
+.resend-box-standalone {
+  max-width: 680px !important;
+  width: 100% !important;
+}
+.resend-box-standalone .input-control {
+  min-width: 0 !important;
+}
+.toast-message.error .toast-icon,
+.toast-message.warning .toast-icon {
+  background: #fee2e2 !important;
+  color: #dc2626 !important;
 }

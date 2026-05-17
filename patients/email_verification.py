@@ -111,7 +111,7 @@ def send_verification_email(request, user):
     message.attach_alternative(html_body, "text/html")
     try:
         message.send(fail_silently=False)
-    except (SMTPException, OSError) as exc:
+    except Exception as exc:
         raise EmailVerificationDeliveryError(
             "We could not send the verification email right now. Please check the email settings and try again."
         ) from exc

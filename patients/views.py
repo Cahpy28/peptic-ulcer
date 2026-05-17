@@ -25,43 +25,49 @@ def register(request):
         return redirect("patients:dashboard")
 
     if request.method == "POST":
-        posted_email = request.POST.get("email", "").strip().lower()
-        if posted_email:
-            User = get_user_model()
-            existing_user = User.objects.filter(email__iexact=posted_email).first()
-            if existing_user and not existing_user.is_active:
-                request.session["pending_verification_email"] = existing_user.email
+        try:
+            posted_email = request.POST.get("email", "").strip().lower()
+            if posted_email:
+                User = get_user_model()
+                existing_user = User.objects.filter(email__iexact=posted_email).first()
+                if existing_user and not existing_user.is_active:
+                    request.session["pending_verification_email"] = existing_user.email
+                    try:
+                        send_verification_email(request, existing_user)
+                        messages.success(request, "This email already has an unverified account. A fresh verification code and link have been sent.")
+                    except EmailVerificationDeliveryError:
+                        logger.exception("Verification resend failed during registration for %s", existing_user.email)
+                        messages.error(
+                            request,
+                            "This email already has an unverified account, but the verification email could not be sent. Check Gmail SMTP settings on Render, then use Resend Link.",
+                        )
+                    return redirect("patients:verification_sent")
+                if existing_user and existing_user.is_active:
+                    messages.info(request, "An account with this email already exists. Please login or use Forgot Password.")
+                    return redirect("login")
+
+            form = PatientRegistrationForm(request.POST)
+            if form.is_valid():
+                user = form.save(commit=False)
+                user.is_active = False
+                user.save()
+                request.session["pending_verification_email"] = user.email
                 try:
-                    send_verification_email(request, existing_user)
-                    messages.success(request, "This email already has an unverified account. A fresh verification code and link have been sent.")
-                except EmailVerificationDeliveryError:
-                    logger.exception("Verification resend failed during registration for %s", existing_user.email)
+                    send_verification_email(request, user)
+                    messages.success(request, "Verification code and link sent to your email.")
+                except EmailVerificationDeliveryError as exc:
+                    logger.exception("Verification email delivery failed for %s", user.email)
                     messages.error(
                         request,
-                        "This email already has an unverified account, but the verification email could not be sent. Check Gmail SMTP settings on Render, then use Resend Link.",
+                        "Your account was created, but the verification email could not be sent. Check Gmail SMTP settings on Render, then use Resend Link.",
                     )
                 return redirect("patients:verification_sent")
-            if existing_user and existing_user.is_active:
-                messages.info(request, "An account with this email already exists. Please login or use Forgot Password.")
-                return redirect("login")
-
-        form = PatientRegistrationForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.is_active = False
-            user.save()
-            request.session["pending_verification_email"] = user.email
-            try:
-                send_verification_email(request, user)
-                messages.success(request, "Verification code and link sent to your email.")
-            except EmailVerificationDeliveryError as exc:
-                logger.exception("Verification email delivery failed for %s", user.email)
-                messages.error(
-                    request,
-                    "Your account was created, but the verification email could not be sent. Check Gmail SMTP settings on Render, then use Resend Link.",
-                )
-            return redirect("patients:verification_sent")
-        logger.info("Registration form invalid: %s", form.errors.as_json())
+            logger.info("Registration form invalid: %s", form.errors.as_json())
+        except Exception:
+            logger.exception("Registration crashed")
+            form = PatientRegistrationForm(request.POST)
+            form.add_error(None, "Registration could not continue because the server hit a configuration problem. Please check Render logs, then try again.")
+            return render(request, "registration/register.html", {"form": form}, status=200)
     else:
         form = PatientRegistrationForm()
     return render(request, "registration/register.html", {"form": form})
@@ -109,10 +115,20 @@ def resend_verification(request):
     email = request.POST.get("email", "").strip().lower()
     User = get_user_model()
     user = User.objects.filter(email__iexact=email, is_active=False).first()
-    if user:
+    if not user:
+        messages.error(request, "No unverified account was found for that email address.")
+        return redirect("login")
+
+    request.session["pending_verification_email"] = user.email
+    try:
         send_verification_email(request, user)
-        request.session["pending_verification_email"] = user.email
-    messages.success(request, "A fresh verification code and link have been sent.")
+        messages.success(request, "A fresh verification code and link have been sent.")
+    except EmailVerificationDeliveryError:
+        logger.exception("Verification resend failed for %s", user.email)
+        messages.error(
+            request,
+            "We found your unverified account, but email delivery is not working yet. Check Gmail SMTP settings on Render and try again.",
+        )
     return redirect("patients:verification_sent")
 
 
